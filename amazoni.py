@@ -114,11 +114,11 @@ def save_to_json(data_list, filename):
 
 # ================== Main Workflow ==================
 
-def main():
+def main(search_string):
     driver = init_driver()
     
-    # 1. Open Alibaba search
-    search_url = f"https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText=puff+panels"
+    # search_string = "puff+panels+for+cold+storage"
+    search_url = f"https://www.alibaba.com/trade/search?fsb=y&IndexArea=product_en&SearchText={search_string}"
     driver.get(search_url)
     
     scraped_data = []
@@ -175,9 +175,17 @@ def main():
             time.sleep(5)
 
     # 4. Save results
-    save_to_csv(scraped_data, "alibaba_puff_panels.csv")
-    save_to_json(scraped_data, "alibaba_puff_panels.json")
+    save_to_csv(scraped_data, f"alibaba_{search_string}.csv")
+    save_to_json(scraped_data, f"alibaba_{search_string}.json")
     driver.quit()
 
 if __name__ == "__main__":
-    main()
+    search_strings = [
+        "puff+panels+for+cold+storage", "condenser+cold+storage", "evaporator+cold+storage","expansion+valve+cold+storage",
+        "control+panel+cold+storage","refregirant+gases","solar+panels+for+cold+storage","batteries+for+cold+storage"]
+    for search_string in search_strings:
+        print(f"Starting search for: {search_string}")
+        main(search_string)
+        print("Search complete.")
+        time.sleep(random.randint(5, 10))  # FIXED: Added random delay to avoid detection
+    
